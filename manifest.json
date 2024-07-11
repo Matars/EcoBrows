@@ -1,0 +1,24 @@
+{
+    "manifest_version": 3,
+    "name": "EcoBrowse",
+    "version": "1.0",
+    "description": "Reduce your carbon footprint while browsing the internet by optimizing resource usage.",
+    "permissions": [
+      "history",
+      "activeTab",
+      "storage",
+      "webRequest",
+      "webRequestBlocking",
+      "*://*/*"
+    ],
+    "action": {
+      "default_popup": "popup.html"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["popup.js"]
+      }
+    ]
+  }
+  
