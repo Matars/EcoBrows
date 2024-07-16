@@ -1,27 +1,32 @@
 {
-    "manifest_version": 3,
-    "name": "EcoBrowse",
-    "version": "1.0",
-    "description": "Reduce your carbon footprint while browsing the internet by optimizing resource usage.",
-    "permissions": [
-      "history",
-      "activeTab",
-      "storage",
-      "webRequest",
-      "webRequestBlocking",
-      "*://*/*"
-    ],
-    "content_security_policy": {
-      "extension_pages": "script-src 'self'; object-src 'self'"
-    },
-    "action": {
-      "default_popup": "popup.html"
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["popup.js"]
-      }
-    ]
-  }
-  
+  "manifest_version": 3,
+  "name": "EcoBrowse",
+  "version": "1.0",
+  "description": "Reduce your carbon footprint while browsing the internet by optimizing resource usage.",
+  "permissions": [
+    "history",
+    "activeTab",
+    "storage",
+    "webRequest",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

@@ -1,90 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EcoBrowse Extension</title>
     <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="loadingIndicator" style="display: none;">Calculating...</div>
+    <div id="refinementMessage" style="display: none;">Refining calculation...</div>
     <div class="container fade-in">
-      <div class="logo">
-        <img src="icon.svg" alt="EcoBrowse" />
-      </div>
-      <h1>EcoBrowse</h1>
-      <div class="toggle-container">
-        <label class="toggle-switch">
-          <input type="checkbox" id="ecoModeToggle" checked />
-          <span class="slider"></span>
-        </label>
-        <span class="toggle-label">Eco Mode</span>
-      </div>
-      <div class="stats-container">
-        <div class="stat-box">
-          <div class="stat-title">Carbon Footprint</div>
-          <div class="stat-value" id="carbonFootprint">0</div>
+        <div class="logo">
+            <img src="icon.svg" alt="EcoBrowse" />
         </div>
-        <div class="stat-box">
-          <div class="stat-title">Carbon Savings</div>
-          <div class="stat-value" id="carbonSavings">0</div>
+        <h1>EcoBrowse</h1>
+        <div class="toggle-container">
+            <label class="toggle-switch">
+                <input type="checkbox" id="ecoModeToggle" checked />
+                <span class="slider"></span>
+            </label>
+            <span class="toggle-label">Eco Mode</span>
         </div>
-      </div>
-      <div class="eco-tip">
-        Tip: EcoBrowse optimizes your browsing to reduce carbon emissions. Keep
-        Eco Mode on to maximize your impact!
-      </div>
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-title">Carbon Footprint</div>
+                <div class="stat-value" id="carbonFootprint">0.00 g</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Carbon Savings</div>
+                <div class="stat-value" id="carbonSavings">0.00 g</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-title">Total Carbon Savings</div>
+                <div class="stat-value" id="totalCarbonSavings">0.00 g</div>
+            </div>
+        </div>
+        <div class="eco-tip">
+            Tip: EcoBrowse optimizes your browsing to reduce carbon emissions. Keep
+            Eco Mode on to maximize your impact!
+        </div>
     </div>
     <div class="settings-container">
-            <div class="settings-title">Settings</div>
-            <div class="setting-item">
-                <span class="setting-label">Dark Mode</span>
-                <label class="settings-switch">
-                    <input type="checkbox" id="darkModeToggle">
-                    <span class="settings-slider"></span>
-                </label>
-            </div>
-            <div class="setting-item">
-                <span class="setting-label">Image Optimization</span>
-                <label class="settings-switch">
-                    <input type="checkbox" id="imageOptimizationToggle">
-                    <span class="settings-slider"></span>
-                </label>
-            </div>
+        <div class="settings-title">Settings</div>
+        <div class="setting-item">
+            <span class="setting-label">Dark Mode</span>
+            <label class="settings-switch">
+                <input type="checkbox" id="darkModeToggle">
+                <span class="settings-slider"></span>
+            </label>
+        </div>
+        <div class="setting-item">
+            <span class="setting-label">Image Optimization</span>
+            <label class="settings-switch">
+                <input type="checkbox" id="imageOptimizationToggle">
+                <span class="settings-slider"></span>
+            </label>
         </div>
     </div>
+    <div id="errorMessage" style="display: none; color: red;"></div>
     <script src="popup.js"></script>
-    <script>
-      chrome.runtime.sendMessage({ action: "popupOpened" });
-
-      function adjustFontSize() {
-        const footprintElement = document.getElementById("carbonFootprint");
-        const savingsElement = document.getElementById("carbonSavings");
-        const elements = [footprintElement, savingsElement];
-
-        elements.forEach((element) => {
-          let fontSize = 24;
-          element.style.fontSize = `${fontSize}px`;
-
-          while (element.scrollWidth > element.offsetWidth && fontSize > 10) {
-            fontSize--;
-            element.style.fontSize = `${fontSize}px`;
-          }
-        });
-      }
-
-      // Run on load and whenever the content changes
-      window.addEventListener("load", adjustFontSize);
-      const observer = new MutationObserver(adjustFontSize);
-      observer.observe(document.getElementById("carbonFootprint"), {
-        childList: true,
-        characterData: true,
-        subtree: true,
-      });
-      observer.observe(document.getElementById("carbonSavings"), {
-        childList: true,
-        characterData: true,
-        subtree: true,
-      });
-    </script>
-  </body>
+</body>
 </html>
