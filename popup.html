@@ -1,18 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EcoBrowse Extension</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="assets/style.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <div id="loadingIndicator" style="display: none;">Calculating...</div>
     <div id="refinementMessage" style="display: none;">Refining calculation...</div>
     <div class="container fade-in">
         <div class="logo">
-            <img src="icon.svg" alt="EcoBrowse" />
+            <img src="assets/icon.svg" alt="EcoBrowse" />
         </div>
         <h1>EcoBrowse</h1>
         <div class="toggle-container">
@@ -44,13 +46,6 @@
     <div class="settings-container">
         <div class="settings-title">Settings</div>
         <div class="setting-item">
-            <span class="setting-label">Dark Mode</span>
-            <label class="settings-switch">
-                <input type="checkbox" id="darkModeToggle">
-                <span class="settings-slider"></span>
-            </label>
-        </div>
-        <div class="setting-item">
             <span class="setting-label">Image Optimization</span>
             <label class="settings-switch">
                 <input type="checkbox" id="imageOptimizationToggle">
@@ -60,5 +55,7 @@
     </div>
     <div id="errorMessage" style="display: none; color: red;"></div>
     <script src="popup.js"></script>
+    <script src="content.js"></script>
 </body>
+
 </html>
