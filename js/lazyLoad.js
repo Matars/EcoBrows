@@ -7,8 +7,6 @@ chrome.storage.sync.get(
         "Both Eco Mode and Image Optimization are enabled. Running script..."
       );
 
-      console.log("CONTENT.JS LOADED");
-
       function handleDOMLoaded() {
         console.log("DOM fully loaded and parsed");
         const images = document.querySelectorAll("img");
