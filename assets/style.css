@@ -141,7 +141,7 @@ input:checked + .settings-slider:before {
 }
 
 .stat-value {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: 600;
 }
 
