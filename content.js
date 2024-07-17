@@ -1,35 +1,32 @@
-// This file can be used for any content script functionality
-// For now, it's empty as we don't need any specific content script actions
-console.log("EcoBrowse content script loaded");
+chrome.storage.sync.get(
+  ["ecoModeEnabled", "imageOptimizationEnabled"],
+  function (data) {
+    if (data.ecoModeEnabled && data.imageOptimizationEnabled) {
+      // Place your existing code here. This code will only run if both settings are enabled.
+      console.log(
+        "Both Eco Mode and Image Optimization are enabled. Running script..."
+      );
 
-document.addEventListener("DOMContentLoaded", function () {
-  const lazyImages = document.querySelectorAll("img[data-src]");
-  const lazyLoad = (entries, observer) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const img = entry.target;
-        img.src = img.dataset.src;
-        observer.unobserve(img);
+      console.log("CONTENT.JS LOADED");
+
+      function handleDOMLoaded() {
+        console.log("DOM fully loaded and parsed");
+        const images = document.querySelectorAll("img");
+        images.forEach((img) => {
+          img.setAttribute("loading", "lazy");
+        });
       }
-    });
-  };
 
-  const observer = new IntersectionObserver(lazyLoad, {
-    rootMargin: "0px 0px 200px 0px",
-  });
-  lazyImages.forEach((image) => {
-    observer.observe(image);
-  });
-});
-
-document.addEventListener("DOMContentLoaded", function () {
-  const unusedElements = document.querySelectorAll(".ads, .trackers");
-  unusedElements.forEach((element) => element.remove());
-});
-
-const scripts = document.querySelectorAll("script");
-scripts.forEach((script) => {
-  if (!script.defer && !script.async) {
-    script.defer = true;
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", handleDOMLoaded);
+      } else {
+        // The DOMContentLoaded event has already fired
+        handleDOMLoaded();
+      }
+    } else {
+      console.log(
+        "Either Eco Mode or Image Optimization is disabled. Script will not run."
+      );
+    }
   }
-});
+);
