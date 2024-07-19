@@ -73,14 +73,13 @@ CarbonCalculator.Main = {
       )
     );
 
-    const today = new Date().toDateString();
-    chrome.storage.local.get("lastResetDate", (result) => {
+    chrome.storage.local.get(["lastResetDate", "totalFootprint"], (result) => {
+      const today = new Date().toDateString();
       if (result.lastResetDate !== today) {
+        // Update the last reset date, but keep the current footprint
         chrome.storage.local.set(
           {
             lastResetDate: today,
-            totalFootprint: 0,
-            [CarbonCalculator.Constants.LAST_CALCULATION_KEY]: Date.now(),
           },
           () => {
             this.estimateFootprintAndSavings();
@@ -104,4 +103,3 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     CarbonCalculator.Main.estimateFootprintAndSavings();
   }
 });
-
