@@ -11,9 +11,7 @@
     "tabs",
     "scripting"
   ],
-  "host_permissions": [
-    "<all_urls>"
-  ],
+  "host_permissions": ["<all_urls>"],
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com"
   },
@@ -31,7 +29,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["js/main.js", "js/lazyLoad.js"]
+      "js": ["js/main.js", "js/lazyLoad.js", "js/videoOptimization.js"]
     }
   ]
 }

@@ -1,59 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>EcoBrowse Extension</title>
     <link rel="stylesheet" href="assets/style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-</head>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
-    <div id="loadingIndicator" style="display: none;">Calculating...</div>
-    <div id="refinementMessage" style="display: none;">Refining calculation...</div>
+  <body>
+    <div id="loadingIndicator" style="display: none">Calculating...</div>
+    <div id="refinementMessage" style="display: none">
+      Refining calculation...
+    </div>
     <div class="container fade-in">
-        <div class="logo">
-            <img src="assets/icon.svg" alt="EcoBrowse" />
+      <div class="logo">
+        <img src="assets/icon.svg" alt="EcoBrowse" />
+      </div>
+      <h1>EcoBrowse</h1>
+      <div class="toggle-container">
+        <label class="toggle-switch">
+          <input type="checkbox" id="ecoModeToggle" checked />
+          <span class="slider"></span>
+        </label>
+        <span class="toggle-label">Eco Mode</span>
+      </div>
+      <div class="stats-container">
+        <div class="stat-box">
+          <div class="stat-title">Carbon Footprint</div>
+          <div class="stat-value" id="carbonFootprint">0.00 g</div>
         </div>
-        <h1>EcoBrowse</h1>
-        <div class="toggle-container">
-            <label class="toggle-switch">
-                <input type="checkbox" id="ecoModeToggle" checked />
-                <span class="slider"></span>
-            </label>
-            <span class="toggle-label">Eco Mode</span>
+        <div class="stat-box">
+          <div class="stat-title">Carbon Savings</div>
+          <div class="stat-value" id="carbonSavings">0.00 g</div>
         </div>
-        <div class="stats-container">
-            <div class="stat-box">
-                <div class="stat-title">Carbon Footprint</div>
-                <div class="stat-value" id="carbonFootprint">0.00 g</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-title">Carbon Savings</div>
-                <div class="stat-value" id="carbonSavings">0.00 g</div>
-            </div>
-            <div class="stat-box">
-                <div class="stat-title">Total Carbon Savings</div>
-                <div class="stat-value" id="totalCarbonSavings">0.00 g</div>
-            </div>
+        <div class="stat-box">
+          <div class="stat-title">Total Carbon Savings</div>
+          <div class="stat-value" id="totalCarbonSavings">0.00 g</div>
         </div>
-        <div class="eco-tip">
-            Tip: EcoBrowse optimizes your browsing to reduce carbon emissions. Keep
-            Eco Mode on to maximize your impact!
-        </div>
+      </div>
+      <div class="eco-tip">
+        Tip: EcoBrowse optimizes your browsing to reduce carbon emissions. Keep
+        Eco Mode on to maximize your impact!
+      </div>
     </div>
     <div class="settings-container">
-        <div class="settings-title">Settings</div>
-        <div class="setting-item">
-            <span class="setting-label">Image Optimization</span>
-            <label class="settings-switch">
-                <input type="checkbox" id="imageOptimizationToggle">
-                <span class="settings-slider"></span>
-            </label>
-        </div>
+      <div class="settings-title">Settings</div>
+      <div class="setting-item">
+        <span class="setting-label">Image Optimization</span>
+        <label class="settings-switch">
+          <input type="checkbox" id="imageOptimizationToggle" />
+          <span class="settings-slider"></span>
+        </label>
+      </div>
+      <div class="setting-item">
+        <span class="setting-label">Video Optimization</span>
+        <label class="settings-switch">
+          <input type="checkbox" id="videoOptimizationToggle" />
+          <span class="settings-slider"></span>
+        </label>
+      </div>
     </div>
-    <div id="errorMessage" style="display: none; color: red;"></div>
+    <div id="errorMessage" style="display: none; color: red"></div>
     <script src="js/main.js"></script>
     <script src="js/constants.js"></script>
     <script src="js/storage.js"></script>
@@ -62,6 +73,6 @@
     <script src="js/displayUtils.js"></script>
     <script src="js/ecoMode.js"></script>
     <script src="js/lazyLoad.js"></script>
-</body>
-
+    <script src="js/videoOptimization.js"></script>
+  </body>
 </html>

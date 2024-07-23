@@ -50,49 +50,82 @@ CarbonCalculator.Main = {
     const imageOptimizationToggle = document.getElementById(
       "imageOptimizationToggle"
     );
+    const videoOptimizationToggle = document.getElementById(
+      "videoOptimizationToggle"
+    );
 
     chrome.storage.sync.get(
-      ["ecoModeEnabled", "imageOptimizationEnabled"],
+      [
+        "ecoModeEnabled",
+        "imageOptimizationEnabled",
+        "videoOptimizationEnabled",
+      ],
       (data) => {
         ecoModeToggle.checked = data.ecoModeEnabled ?? true;
         imageOptimizationToggle.checked = data.imageOptimizationEnabled ?? true;
+        videoOptimizationToggle.checked =
+          data.videoOptimizationEnabled ?? false;
 
-        CarbonCalculator.EcoMode.toggleEcoMode(ecoModeToggle.checked);
-        CarbonCalculator.EcoMode.toggleImageOptimization(
-          imageOptimizationToggle.checked
-        );
+        this.toggleEcoMode(ecoModeToggle.checked);
+        this.toggleImageOptimization(imageOptimizationToggle.checked);
+        this.toggleVideoOptimization(videoOptimizationToggle.checked);
       }
     );
 
     ecoModeToggle.addEventListener("change", () =>
-      CarbonCalculator.EcoMode.toggleEcoMode(ecoModeToggle.checked)
+      this.toggleEcoMode(ecoModeToggle.checked)
     );
     imageOptimizationToggle.addEventListener("change", () =>
-      CarbonCalculator.EcoMode.toggleImageOptimization(
-        imageOptimizationToggle.checked
-      )
+      this.toggleImageOptimization(imageOptimizationToggle.checked)
+    );
+    videoOptimizationToggle.addEventListener("change", () =>
+      this.toggleVideoOptimization(videoOptimizationToggle.checked)
     );
 
     chrome.storage.local.get(["lastResetDate", "totalFootprint"], (result) => {
       const today = new Date().toDateString();
       if (result.lastResetDate !== today) {
         // Update the last reset date, but keep the current footprint
-        chrome.storage.local.set(
-          {
-            lastResetDate: today,
-          },
-          () => {
-            this.estimateFootprintAndSavings();
-          }
-        );
+        chrome.storage.local.set({ lastResetDate: today }, () => {
+          this.estimateFootprintAndSavings();
+        });
       } else {
         this.estimateFootprintAndSavings();
       }
     });
   },
+
+  toggleEcoMode: function (isEnabled) {
+    chrome.storage.sync.set({ ecoModeEnabled: isEnabled }, () => {
+      console.log("Eco mode is set to " + isEnabled);
+      chrome.runtime.sendMessage({
+        action: "updateEcoMode",
+        enabled: isEnabled,
+      });
+    });
+  },
+
+  toggleImageOptimization: function (isEnabled) {
+    chrome.storage.sync.set({ imageOptimizationEnabled: isEnabled }, () => {
+      console.log("Image optimization is set to " + isEnabled);
+      chrome.runtime.sendMessage({
+        action: "updateImageOptimization",
+        enabled: isEnabled,
+      });
+    });
+  },
+
+  toggleVideoOptimization: function (isEnabled) {
+    chrome.storage.sync.set({ videoOptimizationEnabled: isEnabled }, () => {
+      console.log("Video optimization is set to " + isEnabled);
+      chrome.runtime.sendMessage({
+        action: "updateVideoOptimization",
+        enabled: isEnabled,
+      });
+    });
+  },
 };
 
-// Event listeners
 document.addEventListener(
   "DOMContentLoaded",
   CarbonCalculator.Main.initializeExtension.bind(CarbonCalculator.Main)
