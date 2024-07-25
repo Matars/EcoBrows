@@ -9,7 +9,10 @@
     "storage",
     "webRequest",
     "tabs",
-    "scripting"
+    "scripting",
+    "webNavigation",
+    "windows"
+
   ],
   "host_permissions": ["<all_urls>"],
   "content_security_policy": {

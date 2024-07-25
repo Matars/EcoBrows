@@ -1,4 +1,3 @@
-// main.js
 var CarbonCalculator = CarbonCalculator || {};
 
 CarbonCalculator.Main = {
@@ -47,39 +46,36 @@ CarbonCalculator.Main = {
 
   initializeExtension: function () {
     const ecoModeToggle = document.getElementById("ecoModeToggle");
-    const imageOptimizationToggle = document.getElementById(
-      "imageOptimizationToggle"
-    );
-    const videoOptimizationToggle = document.getElementById(
-      "videoOptimizationToggle"
-    );
+    const imageOptimizationToggle = document.getElementById("imageOptimizationToggle");
+    const videoOptimizationToggle = document.getElementById("videoOptimizationToggle");
+    const tabSuspensionToggle = document.getElementById("tabSuspensionToggle");
 
     chrome.storage.sync.get(
       [
         "ecoModeEnabled",
         "imageOptimizationEnabled",
         "videoOptimizationEnabled",
+        "tabSuspensionEnabled"
       ],
       (data) => {
-        ecoModeToggle.checked = data.ecoModeEnabled ?? true;
-        imageOptimizationToggle.checked = data.imageOptimizationEnabled ?? true;
-        videoOptimizationToggle.checked =
-          data.videoOptimizationEnabled ?? false;
-
-        this.toggleEcoMode(ecoModeToggle.checked);
-        this.toggleImageOptimization(imageOptimizationToggle.checked);
-        this.toggleVideoOptimization(videoOptimizationToggle.checked);
+        ecoModeToggle.checked = data.ecoModeEnabled ?? false;
+        imageOptimizationToggle.checked = data.imageOptimizationEnabled ?? false;
+        videoOptimizationToggle.checked = data.videoOptimizationEnabled ?? false;
+        tabSuspensionToggle.checked = data.tabSuspensionEnabled ?? false;
       }
     );
 
-    ecoModeToggle.addEventListener("change", () =>
-      this.toggleEcoMode(ecoModeToggle.checked)
+    ecoModeToggle.addEventListener("change", (event) =>
+      this.toggleEcoMode(event.target.checked)
     );
-    imageOptimizationToggle.addEventListener("change", () =>
-      this.toggleImageOptimization(imageOptimizationToggle.checked)
+    imageOptimizationToggle.addEventListener("change", (event) =>
+      this.toggleImageOptimization(event.target.checked)
     );
-    videoOptimizationToggle.addEventListener("change", () =>
-      this.toggleVideoOptimization(videoOptimizationToggle.checked)
+    videoOptimizationToggle.addEventListener("change", (event) =>
+      this.toggleVideoOptimization(event.target.checked)
+    );
+    tabSuspensionToggle.addEventListener("change", (event) =>
+      this.toggleTabSuspension(event.target.checked)
     );
 
     chrome.storage.local.get(["lastResetDate", "totalFootprint"], (result) => {
@@ -96,8 +92,14 @@ CarbonCalculator.Main = {
   },
 
   toggleEcoMode: function (isEnabled) {
-    chrome.storage.sync.set({ ecoModeEnabled: isEnabled }, () => {
+    chrome.storage.sync.set({ 
+      ecoModeEnabled: isEnabled,
+      imageOptimizationEnabled: isEnabled,
+      videoOptimizationEnabled: isEnabled,
+      tabSuspensionEnabled: isEnabled
+    }, () => {
       console.log("Eco mode is set to " + isEnabled);
+      this.updateAllToggles(isEnabled);
       chrome.runtime.sendMessage({
         action: "updateEcoMode",
         enabled: isEnabled,
@@ -112,6 +114,7 @@ CarbonCalculator.Main = {
         action: "updateImageOptimization",
         enabled: isEnabled,
       });
+      this.updateEcoModeBasedOnSettings();
     });
   },
 
@@ -122,7 +125,54 @@ CarbonCalculator.Main = {
         action: "updateVideoOptimization",
         enabled: isEnabled,
       });
+      this.updateEcoModeBasedOnSettings();
     });
+  },
+
+  toggleTabSuspension: function (isEnabled) {
+    chrome.storage.sync.set({ tabSuspensionEnabled: isEnabled }, () => {
+      console.log("Tab suspension is set to " + isEnabled);
+      chrome.runtime.sendMessage({
+        action: "updateTabSuspension",
+        enabled: isEnabled,
+      });
+      this.updateEcoModeBasedOnSettings();
+    });
+  },
+
+  updateAllToggles: function (isEnabled) {
+    const toggles = [
+      "imageOptimizationToggle",
+      "videoOptimizationToggle",
+      "tabSuspensionToggle"
+    ];
+
+    toggles.forEach(toggleId => {
+      const toggle = document.getElementById(toggleId);
+      toggle.checked = isEnabled;
+    });
+  },
+
+  updateEcoModeBasedOnSettings: function () {
+    chrome.storage.sync.get(
+      [
+        "imageOptimizationEnabled",
+        "videoOptimizationEnabled",
+        "tabSuspensionEnabled"
+      ],
+      (data) => {
+        const anyEnabled = Object.values(data).some(Boolean);
+        const ecoModeToggle = document.getElementById("ecoModeToggle");
+        
+        if (anyEnabled && !ecoModeToggle.checked) {
+          ecoModeToggle.checked = true;
+          chrome.storage.sync.set({ ecoModeEnabled: true });
+        } else if (!anyEnabled && ecoModeToggle.checked) {
+          ecoModeToggle.checked = false;
+          chrome.storage.sync.set({ ecoModeEnabled: false });
+        }
+      }
+    );
   },
 };
 
