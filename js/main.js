@@ -49,19 +49,22 @@ CarbonCalculator.Main = {
     const imageOptimizationToggle = document.getElementById("imageOptimizationToggle");
     const videoOptimizationToggle = document.getElementById("videoOptimizationToggle");
     const tabSuspensionToggle = document.getElementById("tabSuspensionToggle");
+    const darkModeToggle = document.getElementById("darkModeToggle");
 
     chrome.storage.sync.get(
       [
         "ecoModeEnabled",
         "imageOptimizationEnabled",
         "videoOptimizationEnabled",
-        "tabSuspensionEnabled"
+        "tabSuspensionEnabled",
+        "darkModeEnabled"
       ],
       (data) => {
         ecoModeToggle.checked = data.ecoModeEnabled ?? false;
         imageOptimizationToggle.checked = data.imageOptimizationEnabled ?? false;
         videoOptimizationToggle.checked = data.videoOptimizationEnabled ?? false;
         tabSuspensionToggle.checked = data.tabSuspensionEnabled ?? false;
+        darkModeToggle.checked = data.darkModeEnabled ?? false;
       }
     );
 
@@ -76,6 +79,9 @@ CarbonCalculator.Main = {
     );
     tabSuspensionToggle.addEventListener("change", (event) =>
       this.toggleTabSuspension(event.target.checked)
+    );
+    darkModeToggle.addEventListener("change", (event) =>
+      this.toggleDarkMode(event.target.checked)
     );
 
     chrome.storage.local.get(["lastResetDate", "totalFootprint"], (result) => {
@@ -135,6 +141,23 @@ CarbonCalculator.Main = {
       chrome.runtime.sendMessage({
         action: "updateTabSuspension",
         enabled: isEnabled,
+      });
+      this.updateEcoModeBasedOnSettings();
+    });
+  },
+
+  toggleDarkMode: function (isEnabled) {
+    chrome.storage.sync.set({ darkModeEnabled: isEnabled }, () => {
+      console.log("Dark mode is set to " + isEnabled);
+      chrome.runtime.sendMessage({
+        action: "toggleDarkMode",
+        enabled: isEnabled,
+      }, function(response) {
+        if (response && response.success) {
+          console.log("Dark mode toggled successfully");
+        } else {
+          console.error("Failed to toggle dark mode");
+        }
       });
       this.updateEcoModeBasedOnSettings();
     });
